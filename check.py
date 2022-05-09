@@ -71,14 +71,18 @@ def mainFunction():
     watchLinks = getWatchLinks()
     driver= startDriver()
     emailMessage = ""
-    for watchLink in watchLinks:
-        watchAvailable = checkAvailability(driver, watchLink)
-        if watchAvailable:
-            emailMessage += watchLink + '\n'
-    if emailMessage != "":
-        sendMails(emailMessage)
-try:
-    mainFunction()    
-except Exception as e:
-    sendMails(str(e))
+    try:
+        for watchLink in watchLinks:
+            watchAvailable = checkAvailability(driver, watchLink)
+            if watchAvailable:
+                emailMessage += watchLink + '\n'
+        if emailMessage != "":
+            sendMails(emailMessage)
+    except Exception as e:
+        driver.close()
+        sendMails(str(e), title='WatchChecker - Error during runtime')
+        exit()
+
+
+mainFunction()    
     
